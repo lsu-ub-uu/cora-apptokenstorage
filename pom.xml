@@ -33,27 +33,11 @@
 	<name>apptokenstorage</name>
 	
 	<scm>
-		<connection>scm:git:https://git.epc.ub.uu.se/epc/apptokenstorage.git</connection>
-		<developerConnection>scm:git:https://git.epc.ub.uu.se/epc/apptokenstorage.git</developerConnection>
-		<url>https://git.epc.ub.uu.se/epc/apptokenstorage.git</url>
+		<connection>scm:git:https://github.com/lsu-ub-uu/apptokenstorage.git</connection>
+		<developerConnection>scm:git:https://github.com/lsu-ub-uu/apptokenstorage.git</developerConnection>
+		<url>https://github.com/lsu-ub-uu/apptokenstorage.git</url>
 	</scm>
 
-	<repositories>
-		<repository>
-			<id>maven-public</id>
-			<name>LSU Nexus Repository</name>
-			<url>http://epc.ub.uu.se/nexus/repository/maven-public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<updatePolicy>daily</updatePolicy>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
