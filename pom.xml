@@ -23,19 +23,19 @@
 	<parent>
 		<groupId>se.uu.ub.cora</groupId>
 		<artifactId>cora-parent</artifactId>
-		<version>0.8-SNAPSHOT</version>
+		<version>0.8.6</version>
 	</parent>
 
 	<artifactId>apptokenstorage</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>apptokenstorage</name>
 	
 	<scm>
-		<connection>scm:git:https://github.com/lsu-ub-uu/apptokenstorage.git</connection>
-		<developerConnection>scm:git:https://github.com/lsu-ub-uu/apptokenstorage.git</developerConnection>
-		<url>https://github.com/lsu-ub-uu/apptokenstorage.git</url>
+		<connection>scm:git:https://github.com/lsu-ub-uu/cora-apptokenstorage.git</connection>
+		<developerConnection>scm:git:https://github.com/lsu-ub-uu/cora-apptokenstorage.git</developerConnection>
+		<url>https://github.com/lsu-ub-uu/cora-apptokenstorage.git</url>
 	</scm>
 
 	<properties>
