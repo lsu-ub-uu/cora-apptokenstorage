@@ -20,9 +20,22 @@ package se.uu.ub.cora.apptokenstorage;
 
 import java.util.Map;
 
+/**
+ * AppTokenStoregeProvider is used to provide storage for AppToken
+ */
 public interface AppTokenStorageProvider extends SelectOrder {
 
-	AppTokenStorage getAppTokenStorage();
-
+	/**
+	 * startUsingInitInfo is expected to be called on system startup to allow implementing classes
+	 * to startup the implementing AppTokenStorage as needed
+	 */
 	void startUsingInitInfo(Map<String, String> initInfo);
+
+	/**
+	 * getAppTokenStorage should be implemented in such a way that it returns an AppTokenStorage
+	 * that can be used by AppTokenVerifier
+	 * 
+	 * @return An AppTokenStorage that gives access to storage for the implementing AppTokenStorage
+	 */
+	AppTokenStorage getAppTokenStorage();
 }
