@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Uppsala University Library
+ * Copyright 2015, 2019 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -16,18 +16,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.uu.ub.cora.apptokenstorage;
 
-/**
- * SelectOrder is an interface used to decide which found implementation to use.
- */
-public interface SelectOrder {
-	/**
-	 * getOrderToSelectImplementionsBy should return an int with the select order of the
-	 * implementing class. A standard implementation should have select order 0, and more
-	 * specialized implementations should have higher values, such as 10, 20, etc.
-	 * 
-	 * @return an int with the implementations select order
-	 */
-	int getOrderToSelectImplementionsBy();
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.Test;
+
+public class AppTokenStorageViewExceptionTest {
+	@Test
+	public void testInit() {
+		AppTokenStorageViewException notFound = AppTokenStorageViewException.usingMessage("message");
+
+		assertEquals(notFound.getMessage(), "message");
+	}
+
+	@Test
+	public void testInitWithException() {
+		Exception exception = new Exception();
+		AppTokenStorageViewException notFound = AppTokenStorageViewException.usingMessageAndException("message", exception);
+
+		assertEquals(notFound.getMessage(), "message");
+		assertEquals(notFound.getCause(), exception);
+	}
 }

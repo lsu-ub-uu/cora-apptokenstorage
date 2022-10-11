@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Uppsala University Library
+ * Copyright 2022 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -18,24 +18,14 @@
  */
 package se.uu.ub.cora.apptokenstorage;
 
-import java.util.Map;
+import se.uu.ub.cora.apptokenverifier.AppTokenStorageView;
 
-/**
- * AppTokenStoregeProvider is used to provide storage for AppToken
- */
-public interface AppTokenStorageProvider extends SelectOrder {
+public class AppTokenStorageViewSpy implements AppTokenStorageView {
 
-	/**
-	 * startUsingInitInfo is expected to be called on system startup to allow implementing classes
-	 * to startup the implementing AppTokenStorage as needed
-	 */
-	void startUsingInitInfo(Map<String, String> initInfo);
+	@Override
+	public boolean userIdHasAppToken(String userId, String appToken) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-	/**
-	 * getAppTokenStorage should be implemented in such a way that it returns an AppTokenStorage
-	 * that can be used by AppTokenVerifier
-	 * 
-	 * @return An AppTokenStorage that gives access to storage for the implementing AppTokenStorage
-	 */
-	AppTokenStorage getAppTokenStorage();
 }

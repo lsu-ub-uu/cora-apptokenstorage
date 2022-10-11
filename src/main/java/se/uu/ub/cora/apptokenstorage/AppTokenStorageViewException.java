@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Uppsala University Library
+ * Copyright 2015, 2019 Uppsala University Library
  *
  * This file is part of Cora.
  *
@@ -19,8 +19,25 @@
 
 package se.uu.ub.cora.apptokenstorage;
 
-public interface AppTokenStorage {
+public class AppTokenStorageViewException extends RuntimeException {
 
-	boolean userIdHasAppToken(String userId, String appToken);
+	private static final long serialVersionUID = -4842357477828677591L;
+
+	public static AppTokenStorageViewException usingMessageAndException(String message,
+			Exception exception) {
+		return new AppTokenStorageViewException(message, exception);
+	}
+
+	public static AppTokenStorageViewException usingMessage(String message) {
+		return new AppTokenStorageViewException(message);
+	}
+
+	private AppTokenStorageViewException(String message) {
+		super(message);
+	}
+
+	private AppTokenStorageViewException(String message, Exception exception) {
+		super(message, exception);
+	}
 
 }

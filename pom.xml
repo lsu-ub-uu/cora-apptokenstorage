@@ -26,16 +26,91 @@
 	</parent>
 
 	<artifactId>apptokenstorage</artifactId>
-	<version>2.6-SNAPSHOT</version>
+	<version>3.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>apptokenstorage</name>
 	
+	<properties>
+		<apptokenverifier.version>3.6-SNAPSHOT</apptokenverifier.version>
+		<storage.version>7.0-SNAPSHOT</storage.version>
+		<logger.version>2.5.0</logger.version>
+		<coradata.version>7.1.0</coradata.version>
+		<json.version>3.3.0</json.version>
+		<initialize.version>1.0-SNAPSHOT</initialize.version>
+		<testutils.version>1.6-SNAPSHOT</testutils.version>
+		<storagespies.version>1.0-SNAPSHOT</storagespies.version>
+		<logger-spies.version>1.0-SNAPSHOT</logger-spies.version>
+	</properties>
+
 	<scm>
 		<connection>scm:git:https://github.com/lsu-ub-uu/cora-apptokenstorage.git</connection>
 		<developerConnection>scm:git:https://github.com/lsu-ub-uu/cora-apptokenstorage.git</developerConnection>
 		<url>https://github.com/lsu-ub-uu/cora-apptokenstorage.git</url>
-	  <tag>HEAD</tag>
-  </scm>
+	  	<tag>HEAD</tag>
+  	</scm>
+  	
+  	<dependencies>
+  	<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>apptokenverifier</artifactId>
+			<version>${apptokenverifier.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>storage</artifactId>
+			<version>${storage.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>logger</artifactId>
+			<version>${logger.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>coradata</artifactId>
+			<version>${coradata.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>initialize</artifactId>
+			<version>${initialize.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>testutils</artifactId>
+			<version>${testutils.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>storage-spies</artifactId>
+			<version>${storagespies.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>logger-spies</artifactId>
+			<version>${logger-spies.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
