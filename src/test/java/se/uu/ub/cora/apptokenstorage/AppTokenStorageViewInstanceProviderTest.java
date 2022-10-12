@@ -18,6 +18,7 @@
  */
 package se.uu.ub.cora.apptokenstorage;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.BeforeMethod;
@@ -26,28 +27,49 @@ import org.testng.annotations.Test;
 import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
 import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.logger.spies.LoggerFactorySpy;
+import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactoryImp;
 import se.uu.ub.cora.storage.RecordStorageProvider;
 import se.uu.ub.cora.storage.spies.RecordStorageInstanceProviderSpy;
 
 public class AppTokenStorageViewInstanceProviderTest {
 	LoggerFactorySpy loggerFactorySpy = new LoggerFactorySpy();
-	RecordStorageInstanceProviderSpy recordStorageInstanceProvider = new RecordStorageInstanceProviderSpy();
+	RecordStorageInstanceProviderSpy recordStorageInstanceProvider;
+	private AppTokenStorageViewInstanceProvider instanceProvider;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		LoggerProvider.setLoggerFactory(loggerFactorySpy);
+		recordStorageInstanceProvider = new RecordStorageInstanceProviderSpy();
 		RecordStorageProvider
 				.onlyForTestSetRecordStorageInstanceProvider(recordStorageInstanceProvider);
+		instanceProvider = new AppTokenStorageViewInstanceProviderImp();
 	}
 
 	@Test
-	public void testName() throws Exception {
-		AppTokenStorageViewInstanceProvider instanceProvider = new AppTokenStorageViewInstanceProviderImp();
+	public void testGetStorageView() throws Exception {
 		AppTokenStorageViewImp appTokenStorageView = (AppTokenStorageViewImp) instanceProvider
 				.getStorageView();
+
 		assertTrue(appTokenStorageView instanceof AppTokenStorageViewImp);
 		recordStorageInstanceProvider.MCR.assertReturn("getRecordStorage", 0,
 				appTokenStorageView.onlyForTestGetRecordStorage());
+	}
 
+	@Test
+	public void testCreatedRecordTypeHandlerFactory() throws Exception {
+		AppTokenStorageViewImp appTokenStorageView = (AppTokenStorageViewImp) instanceProvider
+				.getStorageView();
+
+		RecordTypeHandlerFactoryImp recordTypeHandlerFactory = (RecordTypeHandlerFactoryImp) appTokenStorageView
+				.onlyForTestGetRecordTypeHandlerFactory();
+		assertTrue(recordTypeHandlerFactory instanceof RecordTypeHandlerFactoryImp);
+		recordStorageInstanceProvider.MCR.assertReturn("getRecordStorage", 1,
+				recordTypeHandlerFactory.onlyForTestGetRecordStorage());
+
+	}
+
+	@Test
+	public void testGetOrderToSelectImplemtationsBy() throws Exception {
+		assertEquals(instanceProvider.getOrderToSelectImplementionsBy(), 0);
 	}
 }

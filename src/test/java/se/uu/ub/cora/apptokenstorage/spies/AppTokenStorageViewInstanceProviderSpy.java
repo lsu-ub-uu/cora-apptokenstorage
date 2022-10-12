@@ -37,4 +37,9 @@ public class AppTokenStorageViewInstanceProviderSpy implements AppTokenStorageVi
 		return (AppTokenStorageView) MCR.addCallAndReturnFromMRV();
 	}
 
+	@Override
+	public int getOrderToSelectImplementionsBy() {
+		return 0;
+	}
+
 }

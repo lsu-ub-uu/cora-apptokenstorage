@@ -20,13 +20,21 @@ package se.uu.ub.cora.apptokenstorage;
 
 import se.uu.ub.cora.apptokenverifier.AppTokenStorageView;
 import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
+import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactoryImp;
 import se.uu.ub.cora.storage.RecordStorageProvider;
 
 public class AppTokenStorageViewInstanceProviderImp implements AppTokenStorageViewInstanceProvider {
 
 	@Override
 	public AppTokenStorageView getStorageView() {
-		return new AppTokenStorageViewImp(RecordStorageProvider.getRecordStorage());
+		return AppTokenStorageViewImp.usingRecordStorageAndRecordTypeHandlerFactory(
+				RecordStorageProvider.getRecordStorage(),
+				new RecordTypeHandlerFactoryImp(RecordStorageProvider.getRecordStorage()));
+	}
+
+	@Override
+	public int getOrderToSelectImplementionsBy() {
+		return 0;
 	}
 
 }

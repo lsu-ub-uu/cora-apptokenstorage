@@ -18,23 +18,29 @@
  */
 package se.uu.ub.cora.apptokenstorage;
 
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+
+import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.storage.RecordStorage;
+import se.uu.ub.cora.apptokenstorage.spies.RecordTypeHandlerSpy;
 import se.uu.ub.cora.storage.spies.RecordStorageSpy;
 
 public class AppTokenStorageViewTest {
+	private static final String APP_TOKEN = "someAppToken";
+	private static final String USER_ID = "someUserId";
 	private RecordStorageSpy recordStorage;
 	private AppTokenStorageViewImp appTokenStorage;
+	private RecordTypeHandlerFactorySpy recordTypeHandlerFactory;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		recordStorage = new RecordStorageSpy();
-		appTokenStorage = AppTokenStorageViewImp.usingRecordStorage(recordStorage);
+		recordTypeHandlerFactory = new RecordTypeHandlerFactorySpy();
+		appTokenStorage = AppTokenStorageViewImp.usingRecordStorageAndRecordTypeHandlerFactory(
+				recordStorage, recordTypeHandlerFactory);
 	}
 
 	@Test
@@ -43,67 +49,29 @@ public class AppTokenStorageViewTest {
 	}
 
 	@Test
-	public void testOnlyForTestGetRecordStorage() throws Exception {
-		RecordStorage recordStorage2 = appTokenStorage.onlyForTestGetRecordStorage();
-		assertSame(recordStorage2, recordStorage);
+	public void testUserIdHasAppToken_usingDependencies() throws Exception {
+		appTokenStorage.userIdHasAppToken(USER_ID, APP_TOKEN);
+
+		recordStorage.MCR.assertParameterAsEqual("read", 0, "types", List.of("recordType"));
+		recordStorage.MCR.assertParameterAsEqual("read", 0, "id", "user");
+
+		var userData = recordStorage.MCR.getReturnValue("read", 0);
+
+		recordTypeHandlerFactory.MCR.assertParameters("factorUsingDataGroup", 0, userData);
+
+		RecordTypeHandlerSpy userRecordTypeHandler = (RecordTypeHandlerSpy) recordTypeHandlerFactory.MCR
+				.getReturnValue("factorUsingDataGroup", 0);
+		var listOfUserTypes = userRecordTypeHandler.MCR
+				.getReturnValue("getListOfImplementingRecordTypeIds", 0);
+		recordStorage.MCR.assertParameters("read", 1, listOfUserTypes, USER_ID);
 	}
 
-	// @Test
-	// public void testGetSearchTermThrowsExceptionIfAnyExceptionIsThrownInRecordStorage()
-	// throws Exception {
-	// RuntimeException exceptionToThrow = new RuntimeException("Error fromSpy");
-	// recordStorage.MRV.setAlwaysThrowException("read", exceptionToThrow);
-	//
-	// try {
-	// searchStorage.getSearchTerm("someNotFoundId");
-	// assertTrue(false);
-	// } catch (Exception e) {
-	// String errorMessage = "SearchTerm with id: someNotFoundId not found in storage.";
-	// assertException(exceptionToThrow, e, errorMessage);
-	// }
-	// }
+	@Test
+	public void testUserHasToken() throws Exception {
+		// recordStorage.MRV.setReturnValues(APP_TOKEN, null, null);
 
-	// private void assertException(RuntimeException exceptionThrown, Exception catchedException,
-	// String errorMessage) {
-	// assertTrue(catchedException instanceof AppTokenStorageViewException);
-	// assertEquals(catchedException.getMessage(), errorMessage);
-	// assertSame(catchedException.getCause(), exceptionThrown);
-	// }
-	//
-	// @Test
-	// public void testGetSearchTerm() throws Exception {
-	// DataGroup searchTerm = searchStorage.getSearchTerm("someSearchTermId");
-	//
-	// recordStorage.MCR.assertMethodWasCalled("read");
-	// recordStorage.MCR.assertParameterAsEqual("read", 0, "types", List.of("searchTerm"));
-	// recordStorage.MCR.assertParameter("read", 0, "id", "someSearchTermId");
-	// recordStorage.MCR.assertReturn("read", 0, searchTerm);
-	// }
-	//
-	// @Test
-	// public void testGetCollectIndexTermThrowsExceptionIfAnyExceptionIsThrownInRecordStorage()
-	// throws Exception {
-	// RuntimeException exceptionToThrow = new RuntimeException("Error fromSpy");
-	// recordStorage.MRV.setAlwaysThrowException("read", exceptionToThrow);
-	//
-	// try {
-	// searchStorage.getCollectIndexTerm("someNotFoundId");
-	// assertTrue(false);
-	// } catch (Exception e) {
-	// String errorMessage = "CollectIndexTerm with id: someNotFoundId not found in storage.";
-	// assertException(exceptionToThrow, e, errorMessage);
-	// }
-	// }
-	//
-	// @Test
-	// public void testGetCollectIndexTerm() throws Exception {
-	//
-	// DataGroup indexTerm = searchStorage.getCollectIndexTerm("someIndexTermId");
-	//
-	// recordStorage.MCR.assertMethodWasCalled("read");
-	// recordStorage.MCR.assertParameterAsEqual("read", 0, "types", List.of("collectIndexTerm"));
-	// recordStorage.MCR.assertParameter("read", 0, "id", "someIndexTermId");
-	// recordStorage.MCR.assertReturn("read", 0, indexTerm);
-	// }
+		boolean userIdHasAppToken = appTokenStorage.userIdHasAppToken(USER_ID, APP_TOKEN);
+
+	}
 
 }
