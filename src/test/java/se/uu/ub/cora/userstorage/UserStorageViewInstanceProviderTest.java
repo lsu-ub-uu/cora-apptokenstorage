@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -24,17 +24,19 @@ import static org.testng.Assert.assertTrue;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
+import se.uu.ub.cora.gatekeeper.user.UserStorageViewInstanceProvider;
 import se.uu.ub.cora.logger.LoggerProvider;
 import se.uu.ub.cora.logger.spies.LoggerFactorySpy;
 import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactoryImp;
 import se.uu.ub.cora.storage.RecordStorageProvider;
 import se.uu.ub.cora.storage.spies.RecordStorageInstanceProviderSpy;
+import se.uu.ub.cora.userstorage.UserStorageViewImp;
+import se.uu.ub.cora.userstorage.UserStorageViewInstanceProviderImp;
 
-public class AppTokenStorageViewInstanceProviderTest {
+public class UserStorageViewInstanceProviderTest {
 	LoggerFactorySpy loggerFactorySpy = new LoggerFactorySpy();
 	RecordStorageInstanceProviderSpy recordStorageInstanceProvider;
-	private AppTokenStorageViewInstanceProvider instanceProvider;
+	private UserStorageViewInstanceProvider instanceProvider;
 
 	@BeforeMethod
 	public void beforeMethod() {
@@ -42,22 +44,22 @@ public class AppTokenStorageViewInstanceProviderTest {
 		recordStorageInstanceProvider = new RecordStorageInstanceProviderSpy();
 		RecordStorageProvider
 				.onlyForTestSetRecordStorageInstanceProvider(recordStorageInstanceProvider);
-		instanceProvider = new AppTokenStorageViewInstanceProviderImp();
+		instanceProvider = new UserStorageViewInstanceProviderImp();
 	}
 
 	@Test
 	public void testGetStorageView() throws Exception {
-		AppTokenStorageViewImp appTokenStorageView = (AppTokenStorageViewImp) instanceProvider
+		UserStorageViewImp appTokenStorageView = (UserStorageViewImp) instanceProvider
 				.getStorageView();
 
-		assertTrue(appTokenStorageView instanceof AppTokenStorageViewImp);
+		assertTrue(appTokenStorageView instanceof UserStorageViewImp);
 		recordStorageInstanceProvider.MCR.assertReturn("getRecordStorage", 0,
 				appTokenStorageView.onlyForTestGetRecordStorage());
 	}
 
 	@Test
 	public void testCreatedRecordTypeHandlerFactory() throws Exception {
-		AppTokenStorageViewImp appTokenStorageView = (AppTokenStorageViewImp) instanceProvider
+		UserStorageViewImp appTokenStorageView = (UserStorageViewImp) instanceProvider
 				.getStorageView();
 
 		RecordTypeHandlerFactoryImp recordTypeHandlerFactory = (RecordTypeHandlerFactoryImp) appTokenStorageView

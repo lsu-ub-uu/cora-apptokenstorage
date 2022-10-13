@@ -32,11 +32,12 @@
 	<name>apptokenstorage</name>
 	
 	<properties>
-		<apptokenverifier.version>4.0-SNAPSHOT</apptokenverifier.version>
+		<gatekeeper.version>4.0-SNAPSHOT</gatekeeper.version>
 		<storage.version>7.0-SNAPSHOT</storage.version>
 		<spider.version>7.3-SNAPSHOT</spider.version>
 		<logger.version>2.5.0</logger.version>
-		<coradata.version>7.1.0</coradata.version>
+		<coradata.version>7.2-SNAPSHOT</coradata.version>
+		<basicdata.version>5.0-SNAPSHOT</basicdata.version>
 		<beefeater.version>3.7.0</beefeater.version>
 		<bookkeeper.version>8.0-SNAPSHOT</bookkeeper.version>
 		<search.version>5.0-SNAPSHOT</search.version>
@@ -58,8 +59,8 @@
   	<dependencies>
   	<dependency>
 			<groupId>se.uu.ub.cora</groupId>
-			<artifactId>apptokenverifier</artifactId>
-			<version>${apptokenverifier.version}</version>
+			<artifactId>gatekeeper</artifactId>
+			<version>${gatekeeper.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -102,6 +103,12 @@
 			<groupId>se.uu.ub.cora</groupId>
 			<artifactId>coradata</artifactId>
 			<version>${coradata.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>se.uu.ub.cora</groupId>
+			<artifactId>basicdata</artifactId>
+			<version>${basicdata.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

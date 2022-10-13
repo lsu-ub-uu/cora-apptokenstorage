@@ -16,25 +16,13 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage.convert;
 
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageView;
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
-import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactoryImp;
-import se.uu.ub.cora.storage.RecordStorageProvider;
+import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.gatekeeper.user.User;
 
-public class AppTokenStorageViewInstanceProviderImp implements AppTokenStorageViewInstanceProvider {
+public interface DataGroupToUser {
 
-	@Override
-	public AppTokenStorageView getStorageView() {
-		return AppTokenStorageViewImp.usingRecordStorageAndRecordTypeHandlerFactory(
-				RecordStorageProvider.getRecordStorage(),
-				new RecordTypeHandlerFactoryImp(RecordStorageProvider.getRecordStorage()));
-	}
-
-	@Override
-	public int getOrderToSelectImplementionsBy() {
-		return 0;
-	}
+	User groupToUser(DataGroup dataGroup);
 
 }

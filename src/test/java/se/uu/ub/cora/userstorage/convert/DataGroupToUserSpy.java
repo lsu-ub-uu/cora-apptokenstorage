@@ -16,30 +16,29 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.apptokenstorage.spies;
+package se.uu.ub.cora.userstorage.convert;
 
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageView;
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
+import java.util.function.Supplier;
+
+import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.gatekeeper.user.User;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
+import se.uu.ub.cora.userstorage.convert.DataGroupToUser;
 
-public class AppTokenStorageViewInstanceProviderSpy implements AppTokenStorageViewInstanceProvider {
+public class DataGroupToUserSpy implements DataGroupToUser {
 	public MethodCallRecorder MCR = new MethodCallRecorder();
 	public MethodReturnValues MRV = new MethodReturnValues();
 
-	public AppTokenStorageViewInstanceProviderSpy() {
+	public DataGroupToUserSpy() {
 		MCR.useMRV(MRV);
-		MRV.setDefaultReturnValuesSupplier("getStorageView", AppTokenStorageViewSpy::new);
+		User user = new User("someUser");
+		MRV.setDefaultReturnValuesSupplier("groupToUser", (Supplier<User>) () -> user);
 	}
 
 	@Override
-	public AppTokenStorageView getStorageView() {
-		return (AppTokenStorageView) MCR.addCallAndReturnFromMRV();
-	}
-
-	@Override
-	public int getOrderToSelectImplementionsBy() {
-		return 0;
+	public User groupToUser(DataGroup dataGroup) {
+		return (User) MCR.addCallAndReturnFromMRV();
 	}
 
 }

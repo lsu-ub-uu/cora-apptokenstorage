@@ -1,4 +1,4 @@
-package se.uu.ub.cora.apptokenstorage.spies;
+package se.uu.ub.cora.userstorage.spies;
 
 import java.util.Collections;
 import java.util.List;

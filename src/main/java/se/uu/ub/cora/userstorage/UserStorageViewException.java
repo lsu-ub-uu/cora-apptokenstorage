@@ -17,26 +17,27 @@
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage;
 
-import static org.testng.Assert.assertEquals;
+public class UserStorageViewException extends RuntimeException {
 
-import org.testng.annotations.Test;
+	private static final long serialVersionUID = -4842357477828677591L;
 
-public class AppTokenStorageViewExceptionTest {
-	@Test
-	public void testInit() {
-		AppTokenStorageViewException notFound = AppTokenStorageViewException.usingMessage("message");
-
-		assertEquals(notFound.getMessage(), "message");
+	public static UserStorageViewException usingMessageAndException(String message,
+			Exception exception) {
+		return new UserStorageViewException(message, exception);
 	}
 
-	@Test
-	public void testInitWithException() {
-		Exception exception = new Exception();
-		AppTokenStorageViewException notFound = AppTokenStorageViewException.usingMessageAndException("message", exception);
-
-		assertEquals(notFound.getMessage(), "message");
-		assertEquals(notFound.getCause(), exception);
+	public static UserStorageViewException usingMessage(String message) {
+		return new UserStorageViewException(message);
 	}
+
+	private UserStorageViewException(String message) {
+		super(message);
+	}
+
+	private UserStorageViewException(String message, Exception exception) {
+		super(message, exception);
+	}
+
 }

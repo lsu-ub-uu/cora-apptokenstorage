@@ -1,13 +1,13 @@
-import se.uu.ub.cora.apptokenstorage.AppTokenStorageViewInstanceProviderImp;
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageViewInstanceProvider;
+import se.uu.ub.cora.gatekeeper.user.UserStorageViewInstanceProvider;
+import se.uu.ub.cora.userstorage.UserStorageViewInstanceProviderImp;
 
-module se.uu.ub.cora.apptokenstorage {
+module se.uu.ub.cora.userstorage {
 	requires se.uu.ub.cora.logger;
 	requires transitive se.uu.ub.cora.storage;
-	requires transitive se.uu.ub.cora.apptokenverifier;
 	requires transitive se.uu.ub.cora.spider;
+	requires transitive se.uu.ub.cora.gatekeeper;
 
-	provides AppTokenStorageViewInstanceProvider with AppTokenStorageViewInstanceProviderImp;
+	provides UserStorageViewInstanceProvider with UserStorageViewInstanceProviderImp;
 
-	exports se.uu.ub.cora.apptokenstorage;
+	exports se.uu.ub.cora.userstorage;
 }

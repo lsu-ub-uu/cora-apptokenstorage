@@ -16,18 +16,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.uu.ub.cora.apptokenverifier.AppTokenStorageView;
 import se.uu.ub.cora.data.DataGroup;
+import se.uu.ub.cora.gatekeeper.user.UserStorageView;
+import se.uu.ub.cora.gatekeeper.user.User;
 import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactory;
 import se.uu.ub.cora.storage.RecordStorage;
+import se.uu.ub.cora.userstorage.convert.DataGroupToUser;
 
-public class AppTokenStorageViewImp implements AppTokenStorageView {
+public class UserStorageViewImp implements UserStorageView {
 	private static final List<String> LIST_RECORD_TYPE = List.of("recordType");
 	// protected static final String RECORD_TYPE = "recordType";
 	// private static final String PARENT_ID = "parentId";
@@ -36,27 +38,35 @@ public class AppTokenStorageViewImp implements AppTokenStorageView {
 	protected List<String> userRecordTypeNames = new ArrayList<>();
 	private RecordTypeHandlerFactory recordTypeHandlerFactory;
 
-	public static AppTokenStorageViewImp usingRecordStorageAndRecordTypeHandlerFactory(
-			RecordStorage recordStorage, RecordTypeHandlerFactory recordTypeHandlerFactory) {
-		return new AppTokenStorageViewImp(recordStorage, recordTypeHandlerFactory);
+	private DataGroupToUser dataGroupToUser;
+
+	public static UserStorageViewImp usingRecordStorageAndRecordTypeHandlerFactory(
+			RecordStorage recordStorage, RecordTypeHandlerFactory recordTypeHandlerFactory,
+			DataGroupToUser dataGroupToUser) {
+		return new UserStorageViewImp(recordStorage, recordTypeHandlerFactory, dataGroupToUser);
 	}
 
-	private AppTokenStorageViewImp(RecordStorage recordStorage,
-			RecordTypeHandlerFactory recordTypeHandlerFactory) {
+	private UserStorageViewImp(RecordStorage recordStorage,
+			RecordTypeHandlerFactory recordTypeHandlerFactory, DataGroupToUser dataGroupToUser) {
 		this.recordStorage = recordStorage;
 		this.recordTypeHandlerFactory = recordTypeHandlerFactory;
+		this.dataGroupToUser = dataGroupToUser;
 	}
 
 	@Override
-	public boolean userIdHasAppToken(String userId, String appToken) {
-		var userDataRecordGroup = recordStorage.read(LIST_RECORD_TYPE, "user");
+	public User getUserById(String userId) {
+		DataGroup userRecordType = recordStorage.read(LIST_RECORD_TYPE, "user");
 		RecordTypeHandler recordTypeHandler = recordTypeHandlerFactory
-				.factorUsingDataGroup(userDataRecordGroup);
+				.factorUsingDataGroup(userRecordType);
 		var listOfUserTypes = recordTypeHandler.getListOfImplementingRecordTypeIds();
-		recordStorage.read(listOfUserTypes, userId);
+		var userDataGroup = recordStorage.read(listOfUserTypes, userId);
+		return dataGroupToUser.groupToUser(userDataGroup);
+	}
 
-		// getAppTokensForUser()
-		return false;
+	@Override
+	public User getUserByIdFromLogin(String idFromLogin) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	// @Override
@@ -93,45 +103,6 @@ public class AppTokenStorageViewImp implements AppTokenStorageView {
 	// }
 	// return user;
 	// }
-
-	private List<String> getAppTokensForUser(DataGroup user) {
-		if (userExistsAndIsActive(user)) {
-			return getAppTokensForActiveUser(user);
-		}
-		return new ArrayList<>();
-	}
-
-	private boolean userExistsAndIsActive(DataGroup user) {
-		return user != null && userIsActive(user);
-	}
-
-	private List<String> getAppTokensForActiveUser(DataGroup user) {
-		List<DataGroup> userAppTokenGroups = user.getAllGroupsWithNameInData("userAppTokenGroup");
-		return getAppTokensForAppTokenGroups(userAppTokenGroups);
-	}
-
-	private List<String> getAppTokensForAppTokenGroups(List<DataGroup> userAppTokenGroups) {
-		List<String> apptokens = new ArrayList<>(userAppTokenGroups.size());
-		for (DataGroup userAppTokenGroup : userAppTokenGroups) {
-			String appTokenId = extractAppTokenId(userAppTokenGroup);
-			apptokens.add(getTokenFromStorage(appTokenId));
-		}
-		return apptokens;
-	}
-
-	private String extractAppTokenId(DataGroup userAppTokenGroup) {
-		return userAppTokenGroup.getFirstGroupWithNameInData("appTokenLink")
-				.getFirstAtomicValueWithNameInData("linkedRecordId");
-	}
-
-	private String getTokenFromStorage(String appTokenId) {
-		return recordStorage.read(List.of("appToken"), appTokenId)
-				.getFirstAtomicValueWithNameInData("token");
-	}
-
-	private boolean userIsActive(DataGroup user) {
-		return "active".equals(user.getFirstAtomicValueWithNameInData("activeStatus"));
-	}
 
 	public RecordStorage onlyForTestGetRecordStorage() {
 		return recordStorage;

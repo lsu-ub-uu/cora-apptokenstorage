@@ -16,41 +16,48 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage;
 
 import static org.testng.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.apptokenstorage.spies.RecordTypeHandlerSpy;
+import se.uu.ub.cora.data.spies.DataGroupSpy;
+import se.uu.ub.cora.gatekeeper.user.User;
 import se.uu.ub.cora.storage.spies.RecordStorageSpy;
+import se.uu.ub.cora.userstorage.UserStorageViewImp;
+import se.uu.ub.cora.userstorage.convert.DataGroupToUserSpy;
+import se.uu.ub.cora.userstorage.spies.RecordTypeHandlerSpy;
 
-public class AppTokenStorageViewTest {
+public class UserStorageViewTest {
 	private static final String APP_TOKEN = "someAppToken";
 	private static final String USER_ID = "someUserId";
 	private RecordStorageSpy recordStorage;
-	private AppTokenStorageViewImp appTokenStorage;
+	private UserStorageViewImp appTokenStorage;
 	private RecordTypeHandlerFactorySpy recordTypeHandlerFactory;
+	private DataGroupToUserSpy dataGroupToUser;
 
 	@BeforeMethod
 	public void beforeMethod() {
 		recordStorage = new RecordStorageSpy();
 		recordTypeHandlerFactory = new RecordTypeHandlerFactorySpy();
-		appTokenStorage = AppTokenStorageViewImp.usingRecordStorageAndRecordTypeHandlerFactory(
-				recordStorage, recordTypeHandlerFactory);
+		dataGroupToUser = new DataGroupToUserSpy();
+		appTokenStorage = UserStorageViewImp.usingRecordStorageAndRecordTypeHandlerFactory(
+				recordStorage, recordTypeHandlerFactory, dataGroupToUser);
 	}
 
 	@Test
 	public void testInit() throws Exception {
-		assertTrue(appTokenStorage instanceof AppTokenStorageViewImp);
+		assertTrue(appTokenStorage instanceof UserStorageViewImp);
 	}
 
 	@Test
-	public void testUserIdHasAppToken_usingDependencies() throws Exception {
-		appTokenStorage.userIdHasAppToken(USER_ID, APP_TOKEN);
+	public void testGetUserById_usingDependencies() throws Exception {
+		appTokenStorage.getUserById(USER_ID);
 
 		recordStorage.MCR.assertParameterAsEqual("read", 0, "types", List.of("recordType"));
 		recordStorage.MCR.assertParameterAsEqual("read", 0, "id", "user");
@@ -67,11 +74,17 @@ public class AppTokenStorageViewTest {
 	}
 
 	@Test
-	public void testUserHasToken() throws Exception {
-		// recordStorage.MRV.setReturnValues(APP_TOKEN, null, null);
+	public void testGetUserById_userContainsInfo() throws Exception {
+		DataGroupSpy userDataGroup = new DataGroupSpy();
+		userDataGroup.MRV.setReturnValues("getAllGroupsWithNameInData", List.of(),
+				"userAppTokenGroup");
 
-		boolean userIdHasAppToken = appTokenStorage.userIdHasAppToken(USER_ID, APP_TOKEN);
+		recordStorage.MRV.setReturnValues("read", List.of(userDataGroup), Collections.emptyList(),
+				USER_ID);
 
+		User user = appTokenStorage.getUserById(USER_ID);
+
+		dataGroupToUser.MCR.assertReturn("groupToUser", 0, user);
 	}
 
 }

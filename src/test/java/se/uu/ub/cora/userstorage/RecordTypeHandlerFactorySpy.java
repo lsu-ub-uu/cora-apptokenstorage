@@ -1,11 +1,11 @@
-package se.uu.ub.cora.apptokenstorage;
+package se.uu.ub.cora.userstorage;
 
-import se.uu.ub.cora.apptokenstorage.spies.RecordTypeHandlerSpy;
 import se.uu.ub.cora.data.DataGroup;
 import se.uu.ub.cora.spider.recordtype.RecordTypeHandler;
 import se.uu.ub.cora.spider.recordtype.internal.RecordTypeHandlerFactory;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
+import se.uu.ub.cora.userstorage.spies.RecordTypeHandlerSpy;
 
 public class RecordTypeHandlerFactorySpy implements RecordTypeHandlerFactory {
 
